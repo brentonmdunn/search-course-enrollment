@@ -62,16 +62,14 @@ FA22 = {
 view_options = ["1 - Run out of seats"]
 
 
-def case_1(csv_file):
-    pass
+quarter = input("Quarter (xx##): ")
 
+all_courses_path = "data/" + quarter + "all_courses.txt"
 
-with open("all_courses.txt", 'r') as file:
+with open(all_courses_path, 'r') as file:
     all_courses = file.read()
 all_courses_list = all_courses.split('\n')
 
-
-quarter = input("Quarter (xx##): ")
 
 first_class_req = True
 selected_class = ""
@@ -99,7 +97,7 @@ while selected_class not in all_courses_list:
     selected_class = input("Class: ")
     first_class_req = False
 
-file_name = "data/" + quarter + "/" + selected_class + ".csv"
+file_name = "data/" + quarter + "/raw/" + selected_class + ".csv"
 csv_file = csv.reader(open(file_name, 'r'), delimiter=',')
 input_type = input(
     "\n".join(view_options) + "\nEnter the data you would like to see: ")
