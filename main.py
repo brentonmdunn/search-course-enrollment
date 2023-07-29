@@ -1,66 +1,38 @@
 import csv
 import re
 import json
+import time_functions as time_f
+# from time_functions import *
 
 
-def get_year(time):
-    return int(time[0:4])
+def format_output(quarter, selected_class, time, enrollment_details):
 
+    if len(enrollment_details) == 1:
+        # After all grades released
+        pass
+    elif len(enrollment_details) == 2:
+        return "" \
+            f"\n======================================================================\n"\
+            f"{quarter} {selected_class} filled up at approximately {time} during {enrollment_details[0]}.\n"\
+            f"This was during the timeslot for {enrollment_details[1]}."\
+            f"\n======================================================================\n"
+    else:
+        return "" \
+            f"\n======================================================================\n"\
+            f"{quarter} {selected_class} filled up at approximately {time} during {enrollment_details[0]}.\n"\
+            f"This was during the timeslot for {enrollment_details[2]} and {enrollment_details[1]}."\
+            f"\n======================================================================\n"
 
-def get_month(time):
-    return int(time[5:7])
-
-
-def get_day(time):
-    return int(time[8:10])
-
-
-def get_hour(time):
-    return int(time[11:13])
-
-
-def get_minute(time):
-    return int(time[14:16])
-
-
-def get_date_json(time):
-    return {
-        "year": get_year(time),
-        "month": get_month(time),
-        "day": get_day(time)
-    }
-
-
-def get_time_json(time):
-    return {
-        "hour": get_hour(time),
-        "minute": get_minute(time)
-    }
-
-
-def get_date_standard(time):
-    return time[:10]
-
-# csv_file = csv.reader(open('data/FA22/MATH 20C.csv', 'r'), delimiter=',')
-
-
-# Find when window closes
 
 with open("enrollment_window.json", 'r') as file:
     enrollment_window = json.load(file)
 
-
-view_options = ["1 - Run out of seats"]
-
-
 quarter = input("Quarter (xx##): ")
-
 all_courses_path = "data/" + quarter + "/all_courses.txt"
 
 with open(all_courses_path, 'r') as file:
     all_courses = file.read()
 all_courses_list = all_courses.split('\n')
-
 
 first_class_req = True
 selected_class = ""
@@ -91,41 +63,26 @@ while selected_class not in all_courses_list:
 file_name = "data/" + quarter + "/raw/" + selected_class + ".csv"
 csv_file = csv.reader(open(file_name, 'r'), delimiter=',')
 
-print("CSV file opened " + str(file_name))
-input_type = input(
-    "\n".join(view_options) + "\nEnter the data you would like to see: ")
-
 first_row = True
 found_data = False
-if input_type == '1':
-    for row in csv_file:
-        if first_row:
-            first_row = False
-            continue
-        if get_date_standard(row[0]) not in enrollment_window[quarter]:
-            continue
-        if int(row[2]) == 0:
-            # print(row)
-            # print(get_time_json(row[0]))
-            found_data = True
+for row in csv_file:
+    if first_row:
+        first_row = False
+        continue
+    if time_f.get_date_standard(row[0]) not in enrollment_window[quarter]:
+        continue
+    if int(row[2]) == 0:
 
-            print("====================================")
-            # print("This class filled up at approximately %d:%d",
-            #       get_hour(row[0]) % 12, get_minute(row[0]))
+        found_data = True
 
-            hour = get_hour(row[0]) % 12
-            am_pm = "AM"
-            if get_hour(row[0]) > 12:
-                am_pm = "PM"
-            minute = get_minute(row[0])
-            if minute < 10:
-                print(
-                    f"This class filled up at approximately {hour}:0{minute} {am_pm}")
-            else:
-                print(
-                    f"This class filled up at approximately {hour}:{minute} {am_pm}")
-            print("This is during the time: " +
-                  ', '.join(enrollment_window[quarter][get_date_standard(row[0])]))
-            break
-    if not found_data:
-        print("No data found.")
+        hour = time_f.get_hour(row[0]) % 12
+        am_pm = "AM"
+        if time_f.get_hour(row[0]) > 12:
+            am_pm = "PM"
+        minute = time_f.get_minute(row[0])
+        time = f"{hour}:0{minute} {am_pm}" if minute < 10 else f"{hour}:{minute} {am_pm}"
+        print(format_output(quarter, selected_class, time,
+              enrollment_window[quarter][time_f.get_date_standard(row[0])]))
+        break
+if not found_data:
+    print(f"{selected_class} always had seats available.")
