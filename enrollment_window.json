@@ -1,0 +1,29 @@
+{
+  "FA22": {
+    "2022-05-20": ["1st pass", "Priorities", "Seniors"],
+    "2022-05-21": ["1st pass", "Seniors"],
+    "2022-05-22": ["1st pass", "Seniors"],
+    "2022-05-23": ["1st pass", "Seniors", "Juniors"],
+    "2022-05-24": ["1st pass", "Juniors", "Sophomores"],
+    "2022-05-25": ["1st pass", "Sophomores", "Freshmen"],
+    "2022-05-28": ["2nd pass", "Priorities", "Seniors"],
+    "2022-05-29": ["2nd pass", "Seniors"],
+    "2022-05-30": ["2nd pass", "Seniors"],
+    "2022-05-31": ["2nd pass", "Seniors", "Juniors"],
+    "2022-06-01": ["2nd pass", "Juniors", "Sophomores"],
+    "2022-06-02": ["2nd pass", "Sophomores", "Freshmen"]
+  },
+
+  "WI23": {
+    "2022-11-07": ["1st pass", "Priorities"],
+    "2022-11-08": ["1st pass", "Seniors"],
+    "2022-11-09": ["1st pass", "Seniors", "Juniors"],
+    "2022-11-10": ["1st pass", "Juniors", "Sophomores"],
+    "2022-11-11": ["1st pass", "Sophomores", "Freshmen"],
+    "2022-11-14": ["2nd pass", "Priorities"],
+    "2022-11-15": ["2nd pass", "Seniors"],
+    "2022-11-16": ["2nd pass", "Seniors", "Juniors"],
+    "2022-11-17": ["2nd pass", "Juniors", "Sophomores"],
+    "2022-11-18": ["2nd pass", "Sophomores", "Freshmen"]
+  }
+}
