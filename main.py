@@ -1,5 +1,6 @@
 import csv
 import re
+import json
 
 
 def get_year(time):
@@ -44,27 +45,17 @@ def get_date_standard(time):
 
 
 # Find when window closes
-FA22 = {
-    "2022-05-20": ["1st pass", "Priorities", "Seniors"],
-    "2022-05-21": ["1st pass", "Seniors"],
-    "2022-05-22": ["1st pass", "Seniors"],
-    "2022-05-23": ["1st pass", "Seniors", "Juniors"],
-    "2022-05-24": ["1st pass", "Juniors", "Sophomores"],
-    "2022-05-25": ["1st pass", "Sophomores", "Freshmen"],
-    "2022-05-28": ["2nd pass", "Priorities", "Seniors"],
-    "2022-05-29": ["2nd pass", "Seniors"],
-    "2022-05-30": ["2nd pass", "Seniors"],
-    "2022-05-31": ["2nd pass", "Seniors", "Juniors"],
-    "2022-06-01": ["2nd pass", "Juniors", "Sophomores"],
-    "2022-06-02": ["2nd pass", "Sophomores", "Freshmen"]
-}
+
+with open("enrollment_window.json", 'r') as file:
+    enrollment_window = json.load(file)
+
 
 view_options = ["1 - Run out of seats"]
 
 
 quarter = input("Quarter (xx##): ")
 
-all_courses_path = "data/" + quarter + "all_courses.txt"
+all_courses_path = "data/" + quarter + "/all_courses.txt"
 
 with open(all_courses_path, 'r') as file:
     all_courses = file.read()
@@ -99,6 +90,8 @@ while selected_class not in all_courses_list:
 
 file_name = "data/" + quarter + "/raw/" + selected_class + ".csv"
 csv_file = csv.reader(open(file_name, 'r'), delimiter=',')
+
+print("CSV file opened " + str(file_name))
 input_type = input(
     "\n".join(view_options) + "\nEnter the data you would like to see: ")
 
@@ -109,7 +102,7 @@ if input_type == '1':
         if first_row:
             first_row = False
             continue
-        if get_date_standard(row[0]) not in FA22:
+        if get_date_standard(row[0]) not in enrollment_window[quarter]:
             continue
         if int(row[2]) == 0:
             # print(row)
@@ -132,7 +125,7 @@ if input_type == '1':
                 print(
                     f"This class filled up at approximately {hour}:{minute} {am_pm}")
             print("This is during the time: " +
-                  ', '.join(FA22[get_date_standard(row[0])]))
+                  ', '.join(enrollment_window[quarter][get_date_standard(row[0])]))
             break
     if not found_data:
         print("No data found.")
