@@ -13,8 +13,8 @@ def input_quarter(enrollment_window):
 
 def input_class(all_courses_list):
     first_class_req = True
-    selected_class = ""
-    while selected_class not in all_courses_list:
+    selected_class = None
+    while selected_class is None:
         if not first_class_req:
 
             # Input: dept ##
@@ -37,11 +37,11 @@ def input_class(all_courses_list):
                 course_num_numbers_only + r"[A-Za-z]+"
 
             custom_course_num_pattern = re.compile(custom_course_num_regex)
-            similar_classes = list(
-                filter(custom_course_num_pattern.match, all_courses_list))
+            similar_classes = list(filter(custom_course_num_pattern.match, all_courses_list))
 
             print("Class not found. Similar classes: " + ', '.join(similar_classes))
         selected_class = input("Class: ")
+        selected_class = format_class(selected_class, all_courses_list)
         first_class_req = False
     return selected_class
 
@@ -62,3 +62,22 @@ def format_quarter(raw, enrollment_window):
         return correct_format
     
     return None
+
+def format_class(raw, all_courses_list):
+    class_regex = r"([A-Za-z]+)\s*(\d+)"
+    selected_class = re.compile(class_regex).search(raw)
+
+    if not selected_class:
+        return None
+    
+    dept = selected_class.group(1).upper()
+    number = selected_class.group(2).upper()
+
+    correct_format = dept + " " + number
+
+    if correct_format in all_courses_list:
+        return correct_format
+
+    return None
+
+

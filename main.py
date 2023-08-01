@@ -61,3 +61,6 @@ def main():
             break
     if not found_data:
         print(f"{selected_class} always had seats available.")
+
+if __name__ == "__main__":
+    main()
