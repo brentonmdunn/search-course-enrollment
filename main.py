@@ -26,6 +26,8 @@ def main():
     with open("enrollment_window.json", 'r', encoding='utf8') as file:
         enrollment_window = json.load(file)
 
+    for quarter in enrollment_window:
+        print("> " + quarter)
     quarter = input_f.input_quarter(enrollment_window)
     all_courses_path = "data/" + quarter + "/all_courses.txt"
 
