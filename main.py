@@ -1,5 +1,4 @@
 import csv
-import re
 import json
 import custom_functions.time_functions as time_f
 import custom_functions.input as input_f
