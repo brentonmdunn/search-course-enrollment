@@ -1,5 +1,10 @@
 import re
 
+def user_quits(user_input):
+    if user_input.lower() == 'q':
+        return True
+    return False
+
 def input_quarter(enrollment_window):
     first_qtr_req = True
     quarter = None
@@ -7,6 +12,8 @@ def input_quarter(enrollment_window):
         if not first_qtr_req:
             print("Quarter not found.")
         quarter = input("Quarter (xx##): ")
+        if user_quits(quarter):
+            return None
         quarter = format_quarter(quarter, enrollment_window)
         first_qtr_req = False
     return quarter
@@ -41,6 +48,8 @@ def input_class(all_courses_list):
 
             print("Class not found. Similar classes: " + ', '.join(similar_classes))
         selected_class = input("Class: ")
+        if user_quits(selected_class):
+            return None
         selected_class = format_class(selected_class, all_courses_list)
         first_class_req = False
     return selected_class
