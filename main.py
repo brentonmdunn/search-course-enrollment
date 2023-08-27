@@ -22,6 +22,10 @@ def format_output(quarter, selected_class, time, enrollment_details):
             f"\n======================================================================\n"
 
 def main():
+
+    
+
+  
     with open("enrollment_window.json", 'r', encoding='utf8') as file:
         enrollment_window = json.load(file)
 
