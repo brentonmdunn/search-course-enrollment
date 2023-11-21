@@ -1,46 +1,51 @@
-import re
-from typing import Union
+"""Handles input for program."""
 
-QTR_NOT_FOUND_MESSAGE = "Quarter not found."
-QTR_INPUT_PROMPT = "Quarter (xx##): "
-ISOLATE_DEPT_REGEX = r'[A-Za-z]+'
-ISOLATE_COURSE_NUM_REGEX = r'(\d+)([A-Za-z]*)'
+import re
+from typing import List, Optional, Match
+
+QTR_NOT_FOUND_MESSAGE: str = "Quarter not found."
+QTR_INPUT_PROMPT: str = "Quarter (xx##): "
+ISOLATE_DEPT_REGEX: str = r'[A-Za-z]+'
+ISOLATE_COURSE_NUM_REGEX: str = r'(\d+)([A-Za-z]*)'
+QTR_YR_REGEX: str = r"([A-Za-z]+)\s*(\d+)"      # Checks if contains letters followed by numbers
+CLASS_REGEX: str = r'([A-Za-z]+)\s*(\d+)'
+QUIT_CHAR: str = 'q'
 
 def user_quits(user_input: str) -> bool:
     """Quits application if detects a 'q' from user."""
 
-    if user_input.lower() == 'q':
+    if user_input.lower() == QUIT_CHAR:
         return True
     return False
 
-def input_quarter(enrollment_window) -> Union[str, None]:
+def input_quarter(enrollment_window: List[str]) -> Optional[str]:
     """
     Handles user input for quarter prompt.
     
     Returns quarter that user requested, None if fails.
     """
 
-    first_qtr_req = True
-    quarter_requested = None
+    first_qtr_req: bool = True
+    quarter_requested: bool = None
     while quarter_requested is None:
         if not first_qtr_req:
             print(QTR_NOT_FOUND_MESSAGE)
         quarter_requested = input(QTR_INPUT_PROMPT)
         if user_quits(quarter_requested):
             return None
-        quarter_requested = format_quarter(quarter_requested, enrollment_window)
+        quarter_requested: Optional[str] = format_quarter(quarter_requested, enrollment_window)
         first_qtr_req = False
     return quarter_requested
 
-def input_class(all_courses_list) -> Union[str, None]:
+def input_class(all_courses_list: List[str]) -> Optional[str]:
     """
     Handles user input for class prompt.
     
     Returns class that user requested, None if fails.
     """
 
-    first_class_req = True
-    selected_class = None
+    first_class_req: bool = True
+    selected_class: Optional[str] = None
     while selected_class is None:
         if not first_class_req:
 
@@ -76,7 +81,7 @@ def input_class(all_courses_list) -> Union[str, None]:
     return selected_class
 
 
-def format_quarter(raw, enrollment_window):
+def format_quarter(raw: str, enrollment_window: List[str]) -> Optional[str]:
     """
     Standardizes output to have two capital letters followed by two numbers.
     
@@ -85,33 +90,33 @@ def format_quarter(raw, enrollment_window):
     Returns None if fails.
     """
     
-    qtr_yr_regex = r"([A-Za-z]+)\s*(\d+)"      # Checks if contains letters followed by numbers
-    qtr_yr = re.compile(qtr_yr_regex).search(raw)
+    qtr_yr: Optional[Match] = re.compile(QTR_YR_REGEX).search(raw)
 
     if not qtr_yr:
         return None
 
-    qtr = qtr_yr.group(1).upper()
-    yr = qtr_yr.group(2).upper()
+    qtr: Optional[str] = qtr_yr.group(1).upper()
+    yr: Optional[str] = qtr_yr.group(2).upper()
 
-    correct_format = qtr + yr
+    correct_format: str = qtr + yr
 
     if correct_format in enrollment_window:
         return correct_format
     
     return None
 
-def format_class(raw, all_courses_list):
-    class_regex = r"([A-Za-z]+)\s*(\d+)"
-    selected_class = re.compile(class_regex).search(raw)
+def format_class(raw: str, all_courses_list: List[str]) -> Optional[str]:
+    """Standardizes class format."""
+    
+    selected_class: Optional[Match] = re.compile(CLASS_REGEX).search(raw)
 
     if not selected_class:
         return None
     
-    dept = selected_class.group(1).upper()
-    number = selected_class.group(2).upper()
+    dept: Optional[str] = selected_class.group(1).upper()
+    number: Optional[str] = selected_class.group(2).upper()
 
-    correct_format = dept + " " + number
+    correct_format: str = dept + " " + number
 
     if correct_format in all_courses_list:
         return correct_format
