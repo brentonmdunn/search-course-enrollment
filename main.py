@@ -3,6 +3,10 @@ import json
 import custom_functions.time_functions as time_f
 import custom_functions.input as input_f
 
+ENROLLMENT_WINDOW_PATH: str = "enrollment_window.json"
+LIST_ELEMENT: str = "> "
+COURSE_LIST_PATH_TEMPLATE = "data/{quarter}/all_courses.txt"
+
 def format_output(quarter, selected_class, time, enrollment_details):
 
     if len(enrollment_details) == 1:
@@ -22,26 +26,28 @@ def format_output(quarter, selected_class, time, enrollment_details):
             f"\n======================================================================\n"
 
 def main():
+    """Main method that executes all logic."""
 
-    
-
-  
-    with open("enrollment_window.json", 'r', encoding='utf8') as file:
+    # Loads all of the enrollment windows by class standing
+    with open(ENROLLMENT_WINDOW_PATH, 'r', encoding='utf8') as file:
         enrollment_window = json.load(file)
 
     while True:
 
+        # Prompts what quarters user can choose
         for quarter in enrollment_window:
-            print("> " + quarter)
+            print(LIST_ELEMENT + quarter)
         quarter = input_f.input_quarter(enrollment_window)
         if quarter is None:
             break
-        all_courses_path = "data/" + quarter + "/all_courses.txt"
 
+        # Loads all courses for given quarter
+        all_courses_path = COURSE_LIST_PATH_TEMPLATE.format(quarter=quarter)
         with open(all_courses_path, 'r', encoding='utf8') as file:
             all_courses = file.read()
         all_courses_list = all_courses.split('\n')
 
+        # Prompts user to select class
         selected_class = input_f.input_class(all_courses_list)
         if selected_class is None:
             break
